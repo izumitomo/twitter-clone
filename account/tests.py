@@ -76,13 +76,30 @@ class RegisterErrorTests(TestCase):
 
     def test_data_empty(self):
         data = {}
-        self.response = self.client.post(self.url, self.data)
+        self.response = self.client.post(self.url, data)
         self.assertEqual(self.response.status_code, 200)
         self.assertFalse(Account.objects.exists())
         self.assertTemplateUsed(self.response, 'account/register.html')
 
     def test_short_password(self):
-        self.data['password'] = 'pass'
+        # 8文字未満のパスワードを受け付けない
+        self.data['password'] = '1234567'
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_too_long_name(self):
+        # 31文字以上の名前を受け付けない
+        self.data['name'] = "1234567890123456789012345678901"
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_error_email(self):
+        # 不適切なメールアドレスを受け付けない
+        self.data['email'] = 'test'
         self.response = self.client.post(self.url, self.data)
         self.assertEqual(self.response.status_code, 200)
         self.assertFalse(Account.objects.exists())
