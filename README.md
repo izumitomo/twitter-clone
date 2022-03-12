@@ -1,1 +1,1 @@
-# models.ModelからAbstractUserへの変更
+# models.ModelからAbstractUserへの移行環境
