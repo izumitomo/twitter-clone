@@ -39,7 +39,7 @@ class RegisterViewTests(TestCase):
     def setUp(self):
         self.response = self.client.get(reverse('register'))
 
-    def test_statis(self):
+    def test_status(self):
         self.assertEqual(self.response.status_code, 200)
 
     def test_html(self):
@@ -65,7 +65,6 @@ class RegisterTests(TestCase):
 
 
 class RegisterErrorTests(TestCase):
-
     def setUp(self):
         self.url = reverse('register')
         self.data = {
