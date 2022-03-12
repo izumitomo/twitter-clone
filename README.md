@@ -1,1 +1,1 @@
-# twitter-clone
+# models.ModelからAbstractUserへの変更
