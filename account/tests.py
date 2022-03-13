@@ -18,19 +18,19 @@ class StartViewTests(TestCase):
 class AccountModelTest(TestCase):
     def setUp(self):
         self.data = {
-            'name': 'test',
+            'username': 'test',
             'email': 'test@example.com',
-            'password': 'password'
+            'password': 'test.password'
         }
         self.account = Account.objects.create(
-            name=self.data['name'], email=self.data['email'], password=self.data['password'])
+            username=self.data['username'], email=self.data['email'], password=self.data['password'])
 
     def test_acount_number(self):
         account_count = Account.objects.count()
         self.assertEqual(account_count, 1)
 
     def test_account_data(self):
-        self.assertEqual(self.data['name'], self.account.name)
+        self.assertEqual(self.data['username'], self.account.username)
         self.assertEqual(self.data['email'], self.account.email)
         self.assertEqual(self.data['password'], self.account.password)
 
@@ -53,9 +53,10 @@ class RegisterTests(TestCase):
         self.url = reverse('register')
         self.start_url = reverse('start')
         self.data = {
-            'name': 'test',
-            'email': 'test@register.com',
-            'password': 'password'
+            'username': 'test',
+            'email': 'test@example.com',
+            'password1': 'test.password',
+            'password2': 'test.password',
         }
         self.response = self.client.post(self.url, self.data)
 
@@ -68,9 +69,11 @@ class RegisterErrorTests(TestCase):
     def setUp(self):
         self.url = reverse('register')
         self.data = {
-            'name': 'test',
+            'username': 'test',
             'email': 'test@register.com',
-            'password': 'password'
+            'password1': 'test.password',
+            'password2': 'test.password',
+
         }
 
     def test_data_empty(self):
@@ -82,15 +85,8 @@ class RegisterErrorTests(TestCase):
 
     def test_short_password(self):
         # 8文字未満のパスワードを受け付けない
-        self.data['password'] = '1234567'
-        self.response = self.client.post(self.url, self.data)
-        self.assertEqual(self.response.status_code, 200)
-        self.assertFalse(Account.objects.exists())
-        self.assertTemplateUsed(self.response, 'account/register.html')
-
-    def test_too_long_name(self):
-        # 31文字以上の名前を受け付けない
-        self.data['name'] = "1234567890123456789012345678901"
+        self.data['password1'] = '1234567'
+        self.data['password1'] = '1234567'
         self.response = self.client.post(self.url, self.data)
         self.assertEqual(self.response.status_code, 200)
         self.assertFalse(Account.objects.exists())
