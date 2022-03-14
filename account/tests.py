@@ -85,11 +85,25 @@ class RegisterErrorTests(TestCase):
 
     def test_short_password(self):
         # 8文字未満のパスワードを受け付けない
-        self.data['password1'] = '1234567'
-        self.data['password1'] = '1234567'
+        self.data['password1'] = 'abcd123'
+        self.data['password1'] = 'abcd123'
         self.response = self.client.post(self.url, self.data)
         self.assertEqual(self.response.status_code, 200)
         self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_same_username(self):
+        # 既に登録されているユーザ名を受け付けない
+        self.response = self.client.post(self.url, self.data)
+        same_name_data = {
+            'username': 'test',
+            'email': 'test1@register.com',
+            'password1': 'test1.password',
+            'password2': 'test1.password',
+        }
+        self.response = self.client.post(self.url, same_name_data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertEqual(Account.objects.count(), 1)
         self.assertTemplateUsed(self.response, 'account/register.html')
 
     def test_error_email(self):
