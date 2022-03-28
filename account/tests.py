@@ -44,7 +44,6 @@ class RegisterViewTests(TestCase):
 
     def test_html(self):
         self.assertTemplateUsed(self.response, 'account/register.html')
-        # なぜ'account/registerというパスで指定できてるのかは分からない
 
 
 class RegisterTests(TestCase):
@@ -85,7 +84,41 @@ class RegisterErrorTests(TestCase):
     def test_short_password(self):
         # 8文字未満のパスワードを受け付けない
         self.data['password1'] = 'abcd123'
-        self.data['password1'] = 'abcd123'
+        self.data['password2'] = 'abcd123'
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_only_number_password(self):
+        # 数字だけのパスワードを受け付けない
+        self.data['password1'] = '12345678'
+        self.data['password2'] = '12345678'
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_not_equal_password(self):
+        # 異なるパスワードを受け付けない
+        self.data['password2'] = 'test.password2'
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_blank_username(self):
+        # 空白のパスワードを受け付けない
+        self.data['password1'] = ''
+        self.data['password2'] = ''
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_blank_username(self):
+        # 空白のユーザ名を受け付けない
+        self.data['username'] = ''
         self.response = self.client.post(self.url, self.data)
         self.assertEqual(self.response.status_code, 200)
         self.assertFalse(Account.objects.exists())
@@ -108,6 +141,14 @@ class RegisterErrorTests(TestCase):
     def test_error_email(self):
         # 不適切なメールアドレスを受け付けない
         self.data['email'] = 'test'
+        self.response = self.client.post(self.url, self.data)
+        self.assertEqual(self.response.status_code, 200)
+        self.assertFalse(Account.objects.exists())
+        self.assertTemplateUsed(self.response, 'account/register.html')
+
+    def test_blank_username(self):
+        # 空白のメールアドレスを受け付けない
+        self.data['email'] = ''
         self.response = self.client.post(self.url, self.data)
         self.assertEqual(self.response.status_code, 200)
         self.assertFalse(Account.objects.exists())
