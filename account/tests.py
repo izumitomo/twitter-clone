@@ -73,7 +73,6 @@ class RegisterErrorTests(TestCase):
             'email': 'test@register.com',
             'password1': 'test.password',
             'password2': 'test.password',
-
         }
 
     def test_data_empty(self):

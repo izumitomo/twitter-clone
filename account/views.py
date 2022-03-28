@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from .forms import RegisterForm
 from .models import Account
-#from .forms import SignUpForm
 
 
 def start(request):
@@ -14,14 +13,14 @@ def login(request):
 
 def register(request):
     if request.method == 'POST':
-        data = RegisterForm(request.POST)
-        if data.is_valid():
-            account = data.save(commit=False)
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            account = form.save(commit=False)
             account.save()
             return redirect('start')
     else:
-        data = RegisterForm()
-    return render(request, 'account/register.html', {'form': data})
+        form = RegisterForm()
+    return render(request, 'account/register.html', {'form': form})
 
 
 def mypage(request):
