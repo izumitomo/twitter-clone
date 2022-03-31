@@ -15,7 +15,7 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            account = form.save(commit=False)
+            account = form.save()
             account.save()
             return redirect('start')
     else:
