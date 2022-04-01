@@ -1,7 +1,6 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from .models import Account
-from .views import RegisterForm
 
 
 class StartViewTests(TestCase):
