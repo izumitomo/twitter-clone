@@ -145,7 +145,7 @@ class RegisterErrorTests(TestCase):
         self.assertFalse(Account.objects.exists())
         self.assertTemplateUsed(self.response, 'account/register.html')
 
-    def test_blank_username(self):
+    def test_blank_email(self):
         # 空白のメールアドレスを受け付けない
         self.data['email'] = ''
         self.response = self.client.post(self.url, self.data)
