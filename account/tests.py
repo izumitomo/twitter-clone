@@ -106,7 +106,7 @@ class RegisterErrorTests(TestCase):
         self.assertFalse(Account.objects.exists())
         self.assertTemplateUsed(self.response, 'account/register.html')
 
-    def test_blank_username(self):
+    def test_blank_password(self):
         # 空白のパスワードを受け付けない
         self.data['password1'] = ''
         self.data['password2'] = ''
